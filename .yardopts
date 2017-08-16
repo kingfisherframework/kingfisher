@@ -1,0 +1,3 @@
+--title "Kingfisher API Documentation"
+--markup markdown
+lib/**/*.rb

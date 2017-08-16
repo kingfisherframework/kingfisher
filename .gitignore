@@ -1,7 +1,5 @@
 /.bundle/
-/.yardoc
 /Gemfile.lock
-/_yardoc/
 /coverage/
 /doc/
 /pkg/
@@ -10,3 +8,7 @@
 
 # rspec failure tracking
 .rspec_status
+
+# YARD
+/.yardoc
+/_yardoc/

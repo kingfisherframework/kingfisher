@@ -1,11 +1,54 @@
+require "pry"
 require "sequel"
+require "kingfisher/operation"
 
 module Kingfisher
   module DatabaseBackends
     class PostgreSQL
+      attr_reader :db
+
       def initialize(database_url:)
         @database_url = database_url
         @db = open_db
+      end
+
+      def migrate(migration)
+        execute migration.sql
+        db[:__kingfisher_schema_migrations].insert(version: migration.version)
+      end
+
+      def execute(sql)
+        db.execute(sql)
+      end
+
+      def table_exists?(name)
+        db.table_exists?(name)
+      end
+
+      def drop
+        database_operation "DROP DATABASE #{database_name}"
+        Success.new("dropped database #{database_name}")
+      end
+
+      def ensure_migrations_table_exists
+      if !table_exists?("__kingfisher_schema_migrations")
+        execute <<-SQL
+          CREATE TABLE "__kingfisher_schema_migrations" (
+            version VARCHAR NOT NULL,
+            run_on TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW()
+          )
+        SQL
+      end
+      end
+
+      def ensure_exists
+        db.test_connection
+        Success.new("#{database_name} exists")
+      rescue Sequel::DatabaseConnectionError
+        database_operation "CREATE DATABASE #{database_name}"
+        Success.new("creating database #{database_name}")
+      rescue Exception => e
+        Failure.new(e.to_s)
       end
 
       def all(model)
@@ -27,7 +70,23 @@ module Kingfisher
       end
 
       private
-      attr_reader :db, :database_url
+      attr_reader :database_url
+
+      def uri
+        @_uri ||= URI.parse(db.uri)
+      end
+
+      def database_name
+        uri.path[1..-1]
+      end
+
+      def database_operation(sql)
+        tmp_uri = uri
+        tmp_uri.path = "/postgres"
+        Sequel.connect(tmp_uri.to_s) do |db|
+          db.execute sql
+        end
+      end
 
       def open_db
         Sequel.connect database_url

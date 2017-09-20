@@ -12,6 +12,10 @@ module Kingfisher
       backend.find(model, id)
     end
 
+    def where(model, conditions)
+      backend.where(model, conditions)
+    end
+
     def create(model, params)
       backend.create(model, params)
     end
@@ -22,6 +26,5 @@ module Kingfisher
 
     private
     attr_reader :backend
-
   end
 end

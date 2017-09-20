@@ -2,17 +2,21 @@ module Kingfisher
   class Migration
     attr_reader :version, :name
 
-    def initialize(filename)
-      @filename = filename
-      migration_dir = filename.split("/", 3)[1]
+    def initialize(dir)
+      @dir = dir
+      migration_dir = dir.split("/", 2).last
       @version, @name = migration_dir.split("_", 2)
     end
 
-    def sql
-      @_sql ||= File.read(filename)
+    def up_sql
+      @_up_sql ||= File.read("#{dir}/up.sql")
+    end
+
+    def down_sql
+      @_down_sql ||= File.read("#{dir}/down.sql")
     end
 
     private
-    attr_reader :filename
+    attr_reader :dir
   end
 end

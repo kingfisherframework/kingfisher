@@ -1,16 +1,12 @@
 require "kingfisher/migration"
 
 module Kingfisher
-  class NullReporter
-    def report; end
-  end
-
   class Migrator
     def initialize(config)
       @config = config
     end
 
-    def run(reporter: NullReporter.new)
+    def run(reporter:)
       ensure_migrations_table_exists
       run_new_migrations(reporter)
     end
@@ -36,8 +32,8 @@ module Kingfisher
 
     def all_migrations
       Dir.
-        glob("migrations/**/up.sql").
-        map { |file| Migration.new(file) }
+        glob("migrations/*").
+        map { |dir| Migration.new(dir) }
     end
 
     def migrated

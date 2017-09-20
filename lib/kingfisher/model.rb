@@ -1,11 +1,12 @@
 module Kingfisher
   class Model
     def initialize(attributes)
-      @attributes = attributes
+      @attributes = {}
+      attributes.each { |key, value| @attributes[key.to_sym] = value }
     end
 
     def [](key)
-      attributes[key]
+      attributes[key.to_sym]
     end
 
     private

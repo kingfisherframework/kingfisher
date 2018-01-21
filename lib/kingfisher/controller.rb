@@ -53,7 +53,7 @@ module Kingfisher
     end
 
     def params
-      request.params
+      request.env.fetch("params") { {} }
     end
 
     def redirect(path)

@@ -67,6 +67,7 @@ module Kingfisher
     end
 
     private
+    attr_reader :url
 
     def regex
       Regexp.new("\\A#{url.gsub(/\/:[^\/]+/, "\\/([^\\/]+)")}\\z")

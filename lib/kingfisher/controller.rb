@@ -48,10 +48,6 @@ module Kingfisher
       view_class.new(request, locals: locals)
     end
 
-    def repo
-      request.env.fetch("repo") { NullRepo.new }
-    end
-
     def params
       request.env.fetch("params") { {} }
     end

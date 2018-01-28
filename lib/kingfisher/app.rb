@@ -16,13 +16,17 @@ module Kingfisher
 
     def call(env)
       request = Rack::Request.new(env)
-      request.env["repo"] = repo
+      request.env["dependencies"] = dependencies
 
       builder.call(env)
     end
 
     private
     attr_reader :builder, :router, :config
+
+    def dependencies
+      config.dependencies
+    end
 
     def root
       config.root

@@ -3,7 +3,7 @@ require "kingfisher/operation"
 require "kingfisher/migration"
 
 module Kingfisher
-  module DatabaseBackends
+  module RepoBackends
     class PostgreSQL
       attr_reader :db
 
@@ -74,6 +74,21 @@ module Kingfisher
 
       def all(model)
         db[table_name(model)].all
+      end
+
+      def assoc(parent, child_model)
+        fk = foreign_key(parent.class)
+        db[table_name(child_model)].where(fk => id(parent)).map do |record|
+          child_model.new(record)
+        end
+      end
+
+      def id(model)
+        model["id"]
+      end
+
+      def foreign_key(model)
+        "#{table_name(model)}_id".to_sym
       end
 
       def where(model, conditions)

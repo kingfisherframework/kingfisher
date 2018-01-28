@@ -19,10 +19,20 @@ module Kingfisher
       [render]
     end
 
-    def render
-      Slim::Template.
+    def render(show_layout: true)
+      rendered = Slim::Template.
         new("web/templates/#{template}.slim").
         render(self)
+
+      if show_layout
+        Slim::Template.new("web/templates/layouts/#{layout}.slim").render(self) { rendered }
+      else
+        rendered
+      end
+    end
+
+    def partial(view_class, locals: {})
+      view_class.new(request, locals: locals).render(show_layout: false)
     end
 
     private

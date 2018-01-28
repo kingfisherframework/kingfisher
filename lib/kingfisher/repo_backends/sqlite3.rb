@@ -1,7 +1,7 @@
 require "sequel"
 
 module Kingfisher
-  module DatabaseBackends
+  module RepoBackends
     class SqlLite3
       def initialize(database_url:)
         @database_url = database_url

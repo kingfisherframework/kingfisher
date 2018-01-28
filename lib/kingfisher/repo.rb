@@ -4,6 +4,10 @@ module Kingfisher
       @backend = backend
     end
 
+    def assoc(parent, children)
+      backend.assoc(parent, children)
+    end
+
     def all(model)
       backend.all(model)
     end

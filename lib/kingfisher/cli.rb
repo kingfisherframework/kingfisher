@@ -3,7 +3,7 @@ module Kingfisher
     ALIASES = {
       "s" => "server",
       "g" => "generate"
-    }
+    }.freeze
 
     def initialize(args, config:, reporter:)
       @command = args.shift # must shift or rack will use command as environment

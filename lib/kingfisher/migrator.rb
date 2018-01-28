@@ -36,6 +36,7 @@ module Kingfisher
     def all_migrations
       Dir.
         glob("migrations/*").
+        sort.
         map { |dir| Migration.new(dir) }
     end
 

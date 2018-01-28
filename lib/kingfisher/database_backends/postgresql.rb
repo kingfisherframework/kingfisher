@@ -1,4 +1,3 @@
-require "pry"
 require "sequel"
 require "kingfisher/operation"
 require "kingfisher/migration"
@@ -36,6 +35,10 @@ module Kingfisher
 
       def connected?
         @connected
+      end
+
+      def migrated
+        schema_migrations.map(:version)
       end
 
       def drop

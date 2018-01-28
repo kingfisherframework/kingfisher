@@ -14,6 +14,10 @@ module Kingfisher
     private
     attr_reader :config
 
+    def ensure_migrations_table_exists
+      backend.ensure_migrations_table_exists
+    end
+
     def backend
       config.backend
     end
@@ -26,8 +30,7 @@ module Kingfisher
     end
 
     def new_migrations
-      all_migrations.
-        reject { |migration| migrated.include?(migration.version) }
+      all_migrations.reject { |migration| migrated.include?(migration.version) }
     end
 
     def all_migrations
@@ -38,11 +41,7 @@ module Kingfisher
     end
 
     def migrated
-      backend.db[:__kingfisher_schema_migrations].map(:version)
-    end
-
-    def ensure_migrations_table_exists
-      backend.ensure_migrations_table_exists
+      backend.migrated
     end
   end
 end
